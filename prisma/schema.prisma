@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Reservation {
+  id            String     @id @default(uuid())
+  party_count   Int
+  restaurant_id String
+  customer_id   String
+  date          DateTime   @db.Date @default(now())
+  customer      Customer   @relation(fields: [customer_id], references: [id])
+  restaurant    Restaurant @relation(fields: [restaurant_id], references: [id])
+}
+
+model Customer {
+  id          String        @id @default(uuid())
+  name        String
+  reservation Reservation[]
+}
+
+model Restaurant {
+  id          String        @id @default(uuid())
+  name        String
+  reservation Reservation[]
+}
